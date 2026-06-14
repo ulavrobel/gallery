@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  h2= title
+  hr
+
+  if messages
+    div.alert.alert-info
+      ul.mb-0
+        for message in messages
+          li!= message
+
+  form(method='POST' action='/images/image_upload' enctype='multipart/form-data' style="max-width: 600px;")
+    div.mb-3
+      label.form-label(for='name') Nazwa obrazka:
+      input#name.form-control(type='text', name='name', required)
+    
+    div.mb-3
+      label.form-label(for='description') Opis:
+      input#description.form-control(type='text', name='description', required)
+    
+    div.mb-3
+      label.form-label(for='gallery') Galeria:
+      select#gallery.form-select(name='gallery', required)
+        option(value='') --Wybierz galerię--
+        for gallery in galleries
+          option(value=gallery._id) #{gallery.name}
+          
+    div.mb-3
+      label.form-label(for='imageFile') Plik:
+      input#imageFile.form-control(type='file', name='imageFile', accept='image/png, image/jpeg', required)
+    
+    button.btn.btn-primary(type='submit') Opublikuj

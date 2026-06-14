@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title
+
+  if users && users.length > 0
+    ul
+      each user in users
+        li
+          strong #{user.first_name} #{user.last_name} 
+          | (#{user.username})
+          
+          if user.username !== 'admin'
+            br
+            a(href=`/users/user_delete?user_id=${user._id}` onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?')" style="color: red; text-decoration: none; font-size: 0.9em;") Usuń użytkownika
+          hr
+  else
+    p Brak użytkowników.

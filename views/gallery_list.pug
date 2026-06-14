@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h1= title
+
+  if galleries && galleries.length > 0
+    ul
+      each gallery in galleries
+        li
+          a(href=`/galleries/gallery_browse?gallery_id=${gallery._id}`)
+            strong= gallery.name
+            
+          |  - #{gallery.description}
+          br
+          small Data dodania: #{gallery.date.toLocaleString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+          if gallery.owner
+            small  | Twórca: #{gallery.owner.first_name} #{gallery.owner.last_name} (#{gallery.owner.username})
+          else
+            small  | Twórca: Nieznany
+
+          if loggedUser === 'admin' || (gallery.owner && loggedUser === gallery.owner.username)
+            br
+            a(href=`/galleries/gallery_update?gallery_id=${gallery._id}` style="color: orange; text-decoration: none; margin-right: 15px; font-size: 0.9em;") Edytuj galerię
+            a(href=`/galleries/gallery_delete?gallery_id=${gallery._id}` onclick="return confirm('Czy na pewno chcesz usunąć tę galerię?')" style="color: red; text-decoration: none; font-size: 0.9em;") Usuń galerię
+          hr
+  else
+    p No galleries found.

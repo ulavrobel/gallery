@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+
+  if messages
+    ul
+      for message in messages
+        li!= message

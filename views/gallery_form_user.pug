@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h2= title
+  hr
+
+  if messages
+    div.alert.alert-info
+      ul.mb-0
+        for message in messages
+          li!= message
+
+  form(method='POST' action='' style="max-width: 600px;")
+    div.mb-3
+      label.form-label(for='g_name') Nazwa galerii:
+      input#g_name.form-control(type='text', name='g_name', required, value=(undefined===gallery ? '' : gallery.name))
+    
+    div.mb-3
+      label.form-label(for='g_description') Opis:
+      input#g_description.form-control(type='text', name='g_description', required, value=(undefined===gallery ? '' : gallery.description))
+    
+    button.btn.btn-primary(type='submit') Zatwierdź

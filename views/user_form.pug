@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  h2= title
+  hr
+
+  if errors
+    div.alert.alert-danger
+      ul.mb-0
+        for error in errors
+          li!= error.msg
+
+  form(method='POST' action='' style="max-width: 600px;")
+    div.mb-3
+      label.form-label(for='first_name') Imię:
+      input#first_name.form-control(type='text', name='first_name', required, value=(undefined===user ? '' : user.first_name))
+    
+    div.mb-3
+      label.form-label(for='last_name') Nazwisko:
+      input#last_name.form-control(type='text', name='last_name', required, value=(undefined===user ? '' : user.last_name))
+    
+    div.mb-3
+      label.form-label(for='username') Nazwa użytkownika:
+      input#username.form-control(type='text', name='username', required, value=(undefined===user ? '' : user.username))
+    
+    div.mb-3
+      label.form-label(for='password') Hasło:
+      input#password.form-control(type='password', minlength="8", placeholder='min. 8 liter', name='password', autocomplete='off', required)
+    
+    button.btn.btn-primary(type='submit') Dodaj użytkownika

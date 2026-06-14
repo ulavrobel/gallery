@@ -1,0 +1,54 @@
+extends layout
+
+block content
+  h2 Galeria: #{title}
+  p.lead Opis: #{gallery.description}
+  if gallery.owner
+    p.text-muted Autor: #{gallery.owner.first_name} #{gallery.owner.last_name} (#{gallery.owner.username})
+  hr
+
+  if images && images.length > 0
+    div.d-flex.flex-wrap.gap-4
+      each image in images
+        div.card.shadow-sm(style="width: 18rem;")
+          a(href="#" data-bs-toggle="modal" data-bs-target=`#modal-${image._id}`)
+            img.card-img-top(src=image.path, alt=image.name, style="height: 200px; object-fit: cover; cursor: pointer;")
+          
+          div.card-body
+            h5.card-title= image.name
+            p.card-text.text-muted(style="font-size: 0.9em;")= image.description
+            
+            if loggedUser === 'admin' || (gallery.owner && loggedUser === gallery.owner.username)
+              div.d-flex.justify-content-between.mb-3
+                a.btn.btn-sm.btn-outline-warning(href=`/images/image_update?image_id=${image._id}`) Edytuj
+                a.btn.btn-sm.btn-outline-danger(href=`/images/image_delete?image_id=${image._id}` onclick="return confirm('Na pewno usunąć to zdjęcie?')") Usuń
+
+            div.bg-light.p-2.rounded
+              h6.text-muted(style="font-size: 0.85em;") Komentarze:
+              if image.comments && image.comments.length > 0
+                ul.list-unstyled.mb-2(style="max-height: 80px; overflow-y: auto; font-size: 0.8em;")
+                  each comment in image.comments
+                    li.border-bottom.pb-1.mb-1
+                      strong.text-primary= comment.author
+                    span.text-muted(style="font-size: 0.8em; margin-left: 5px;") (#{comment.date.toLocaleString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })})
+                    br
+                    | #{comment.text}
+              else
+                p.text-muted(style="font-size: 0.8em; margin-bottom: 5px;") Brak komentarzy.
+              
+              if loggedUser
+                form(method='POST' action=`/images/image_comment?image_id=${image._id}` class="d-flex gap-1")
+                  input.form-control.form-control-sm(type='text' name='comment_text' placeholder='Napisz...' required)
+                  button.btn.btn-sm.btn-primary(type='submit') Dodaj
+
+        div.modal.fade(id=`modal-${image._id}` tabindex="-1" aria-labelledby=`modalLabel-${image._id}` aria-hidden="true")
+          div.modal-dialog.modal-lg.modal-dialog-centered
+            div.modal-content
+              div.modal-header
+                h5.modal-title(id=`modalLabel-${image._id}`)= image.name
+                button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Zamknij")
+              div.modal-body.text-center
+                img.img-fluid.rounded(src=image.path, alt=image.name)
+                p.mt-3.lead= image.description
+  else
+    div.alert.alert-info Brak zdjęć w tej galerii. Kliknij "Dodaj obrazek", aby coś dodać!
