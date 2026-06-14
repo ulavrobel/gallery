@@ -26,16 +26,18 @@ exports.getImageUpload = async (req, res, next) => {
     }
 };
 
-exports.postImageUpload = (req, res, next) => {
-    const uploadDir = path.join(__dirname, '../public/images');
+exports.postImageUpload = async(req, res, next) => {
+    const uploadDir = path.join(__dirname, "../public/images");
 
-    if (!fs.existsSync(uploadDir)){
+    if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
     }
 
-    const form = new formidable.IncomingForm();
-    form.uploadDir = uploadDir;
-    form.keepExtensions = true;
+    const form = new formidable.IncomingForm({
+        uploadDir: uploadDir,
+        multiples: false,
+        keepExtensions: true
+    });
 
     form.parse(req, async (err, fields, files) => {
         if (err) {
